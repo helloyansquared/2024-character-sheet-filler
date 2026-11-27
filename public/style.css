@@ -22,7 +22,10 @@ main { max-width: 880px; margin: 0 auto; padding: 0 20px 40px; }
 .small { font-size: 14px; color: var(--muted); }
 .drop { display: block; border: 2px dashed var(--green); border-radius: 12px; padding: 18px; text-align: center; background: #f1f6f2; cursor: pointer; }
 .drop.over { background: #dcebe2; }
-.drop input { display: block; margin: 0 auto 8px; max-width: 100%; }
+.drop { position: relative; }
+.drop input { position: absolute; width: 1px; height: 1px; opacity: 0; overflow: hidden; }
+.drop:focus-within { outline: 3px solid var(--gold); outline-offset: 2px; }
+.drop b { color: var(--green-d); text-decoration: underline; }
 .go { background: var(--green); color: #fff; border: 2px solid var(--ink); border-radius: 10px; padding: 12px 22px; font: 700 18px system-ui, sans-serif; cursor: pointer; box-shadow: 3px 3px 0 var(--ink); }
 .go:disabled { background: #b9c2bc; cursor: not-allowed; box-shadow: none; }
 .link { background: none; border: 0; padding: 0; color: var(--green-d); text-decoration: underline; font: inherit; cursor: pointer; }
