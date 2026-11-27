@@ -11,52 +11,42 @@
   function setMsg(el, html, kind) { el.innerHTML = html; el.className = "msg" + (kind ? " " + kind : ""); }
   const readFile = f => new Promise((res, rej) => { const r = new FileReader(); r.onload = () => res(new Uint8Array(r.result)); r.onerror = () => rej(r.error); r.readAsArrayBuffer(f); });
 
-  // ------------------------------------------------------------- step 1: blank sheet
-  async function validBlank(bytes) {
-    const doc = await PDFLib.PDFDocument.load(bytes);
-    const have = new Set(doc.getForm().getFields().map(f => f.getName()));
-    return Sheet.REQUIRED.every(n => have.has(n));
+  // ------------------------------------------------------------- files: either drop zone takes either PDF
+  // D&D Beyond's file server only allows its own site to fetch the blank sheet, so the visitor downloads
+  // it (link in step 1) and adds it here. Each added PDF is sorted by what's inside it.
+  async function isBlank(bytes) {
+    try {
+      const doc = await PDFLib.PDFDocument.load(bytes);
+      const have = new Set(doc.getForm().getFields().map(f => f.getName()));
+      return Sheet.REQUIRED.every(n => have.has(n)) ? "yes" : "no";
+    } catch (e) { return "no"; }
   }
-  function blankReady(how) {
+  function blankReady() {
     $("step1").classList.add("done");
-    $("blankStatus").innerHTML = how === "auto" ? "Loaded the official blank 2024 sheet from D&amp;D Beyond. ✓" : "Got the blank 2024 sheet. ✓";
+    $("blankStatus").innerHTML = "Got the blank 2024 sheet. ✓";
     $("blankFallback").hidden = true;
-    step("blank", how);
+    step("blank", "ok");
     refresh();
   }
-  async function loadBlankAuto() {
-    try {
-      const r = await fetch(BLANK_URL, { mode: "cors", credentials: "omit" });
-      if (!r.ok) throw new Error("http-" + r.status);
-      const b = new Uint8Array(await r.arrayBuffer());
-      if (!(await validBlank(b))) throw new Error("bad");
-      state.blank = b; blankReady("auto");
-    } catch (e) {
-      $("blankStatus").textContent = "Step 1 needs one extra click:";
-      $("blankFallback").hidden = false;
-      step("blank", "auto-fail");
+  async function takeFiles(files) {
+    files = [...(files || [])].filter(Boolean);
+    if (!files.length) return;
+    const items = [];
+    for (const f of files) {
+      try { items.push({ f, b: await readFile(f) }); } catch (e) { setMsg($("charMsg"), "Couldn't open " + esc(f.name) + ".", "bad"); }
     }
-  }
-  async function takeBlank(file) {
-    if (!file) return;
-    try {
-      const b = await readFile(file);
-      if (!(await validBlank(b))) {
-        $("blankStatus").innerHTML = "That PDF isn't the fillable 2024 sheet. Use the one from the link below (D&amp;D Beyond Free Rules); the first PHB download isn't fillable.";
-        step("blank", "manual-bad"); return;
-      }
-      state.blank = b; blankReady("manual");
-    } catch (e) {
-      $("blankStatus").textContent = "Couldn't open that file as a PDF. Try downloading the blank sheet again.";
-      step("blank", "manual-err");
-    }
+    for (const it of items) it.kind = await isBlank(it.b);
+    const blank = items.find(it => it.kind === "yes");
+    if (blank) { state.blank = blank.b; blankReady(); }
+    const ch = items.find(it => it.kind === "no");
+    if (ch) { state.fileName = ch.f.name; await takeCharacter(ch.b, "ok"); }
   }
 
   // ------------------------------------------------------------- step 2: character PDF
   const ERR = {
     "not-pdf": "That file isn't a PDF. Export your character from D&amp;D Beyond with <b>Export to PDF</b>.",
     "encrypted": "This PDF is password-protected, so its fields can't be read. Export it again from D&amp;D Beyond.",
-    "no-fields": "This PDF has no form fields. It's probably a printed or “Save as PDF” copy. Download it again straight from D&amp;D Beyond's <b>Export to PDF</b>.",
+    "no-fields": "This PDF has no form fields. If it's your character, it's probably a printed or “Save as PDF” copy: download it again straight from D&amp;D Beyond's <b>Export to PDF</b>. If it's the blank sheet, it's the older non-fillable one: use the <a href=\"" + BLANK_URL + "\" target=\"_blank\" rel=\"noopener\">fillable sheet from the Free Rules</a>.",
     "not-ddb": "This doesn't look like a character PDF exported from D&amp;D Beyond. Other sheets aren't supported yet.",
     "empty": "The character fields in this PDF are empty. D&amp;D Beyond sometimes exports a blank sheet; try exporting it again.",
     "unreadable": "Couldn't read this PDF's structure. If it came from D&amp;D Beyond's Export to PDF, please <a href=\"mailto:hello@yansquared.com?subject=2024%20sheet%20filler\">send it to us</a> so we can fix it.",
@@ -87,11 +77,6 @@
     step("upload", label);
     buildSpells();
     refresh();
-  }
-  async function takeCharFile(file) {
-    if (!file) return;
-    state.fileName = file.name;
-    try { await takeCharacter(await readFile(file), "ok"); } catch (e) { setMsg($("charMsg"), ERR.unreadable, "bad"); step("upload", "fail-read"); }
   }
 
   // ------------------------------------------------------------- step 3: spells
@@ -177,17 +162,17 @@
   });
 
   // ------------------------------------------------------------- inputs: choose + drag and drop
-  function wireDrop(label, input, take) {
-    input.addEventListener("change", () => take(input.files[0]));
+  function wireDrop(label, input) {
+    input.addEventListener("change", () => { takeFiles(input.files); input.value = ""; });
     ["dragenter", "dragover"].forEach(ev => label.addEventListener(ev, e => { e.preventDefault(); label.classList.add("over"); }));
     ["dragleave", "drop"].forEach(ev => label.addEventListener(ev, e => { e.preventDefault(); label.classList.remove("over"); }));
-    label.addEventListener("drop", e => { const f = e.dataTransfer && e.dataTransfer.files[0]; if (f) take(f); });
+    label.addEventListener("drop", e => { e.stopPropagation(); takeFiles(e.dataTransfer && e.dataTransfer.files); });
   }
-  wireDrop($("blankDrop"), $("blankInput"), takeBlank);
-  wireDrop($("charDrop"), $("charInput"), takeCharFile);
-  // dropping a file anywhere else shouldn't make the browser navigate away
+  wireDrop($("blankDrop"), $("blankInput"));
+  wireDrop($("charDrop"), $("charInput"));
+  // dropping PDFs anywhere on the page works too (and never makes the browser navigate away)
   window.addEventListener("dragover", e => e.preventDefault());
-  window.addEventListener("drop", e => e.preventDefault());
+  window.addEventListener("drop", e => { e.preventDefault(); takeFiles(e.dataTransfer && e.dataTransfer.files); });
   $("sampleBtn").addEventListener("click", async () => {
     try {
       const r = await fetch("/sample/rowan-hale-ddb-format.pdf");
@@ -197,5 +182,4 @@
   });
 
   refresh();
-  loadBlankAuto();
 })();

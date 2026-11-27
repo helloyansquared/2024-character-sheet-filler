@@ -7,7 +7,7 @@ Free web tool: load the character PDF you exported from D&D Beyond (**Manage →
 ## How it works
 - `public/core.js` reads the export. D&D Beyond writes it with PDFsharp and no `/AcroForm` entry, so normal form readers see zero fields; the values are in each page's widget annotations, written as plain objects. We scan those directly (no library).
 - It maps them to a character (abilities, saves, skills, attacks, features, equipment, coins, spells by level, slots) and fills the official sheet with [pdf-lib](https://github.com/Hopding/pdf-lib) (MIT, self-hosted in `public/vendor/`). Text that doesn't fit shrinks to 6 pt; anything still too long goes on a continuation page, so nothing is dropped.
-- The blank sheet is fetched by the visitor's browser from D&D Beyond (or dropped in by the visitor). It is not hosted or redistributed here.
+- The visitor downloads the blank sheet from D&D Beyond and adds it; D&D Beyond's file server only allows its own site to fetch it directly (CORS). It is not hosted or redistributed here.
 
 | What | Checked against real exports |
 |---|---|

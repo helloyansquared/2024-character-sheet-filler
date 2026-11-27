@@ -33,7 +33,10 @@ assert.deepEqual(c.speciesTraits, ["Resourceful", "Skillful", "Versatile"]);
 assert.ok(c.equipment.includes("Parchment (one sheet) x10"));
 assert.deepEqual(c.warnings, []);
 assert.equal(Sheet.abbr("60 ft./20 ft. Square"), "60ft/20ft sq");
-assert.equal(Sheet.abbr("Martial, Heavy, Reach, Two-Handed, Graze"), "Martial, Heavy, Reach, 2H, Graze");
+assert.equal(Sheet.abbr("Martial, Heavy, Reach, Two-Handed, Graze"), "Heavy, Reach, 2H, Graze");
+assert.equal(Sheet.abbr("Simple, Finesse, Light, Thrown, Nick, Range (20/60)"), "Finesse, Light, Thrown, Nick, 20/60");
+assert.equal(Sheet.abbr("1A + 10m"), "1A+10m");
+assert.equal(Sheet.abbr("Self/15 ft. Emanation"), "Self/15ft eman");
 
 // errors
 assert.equal(Sheet.check(Object.assign([], { pages: 2 })), "no-fields");

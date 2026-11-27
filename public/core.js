@@ -288,9 +288,12 @@
     return missing.length ? missing : null;
   }
 
-  const ABBR = [[/(\d)\s*(?:feet|ft\.?)(?=\s|\/|$)/gi, "$1ft"], [/\bSphere\b/g, "sph"], [/\bSquare\b/g, "sq"], [/\bCylinder\b/g, "cyl"],
-    [/\bEmanation\b/g, "eman"], [/\bTwo-Handed\b/g, "2H"], [/\bVersatile\b/g, "Vers"], [/\bAmmunition\b/g, "Ammo"], [/\bLoading\b/g, "Load"],
-    [/\bRange\b/g, "Rng"], [/\s*\/\s*/g, "/"], [/\s{2,}/g, " "]];
+  // Shorter forms used only when the full text doesn't fit a box at the minimum size.
+  // Weapon category words (Simple / Martial) are dropped: they're proficiency, not properties.
+  const ABBR = [[/^(Simple|Martial)(,\s*|$)/, ""], [/\bRange \((\d+\/\d+)\)/g, "$1"], [/(\d)\s*(?:feet|ft\.?)(?=\s|\/|,|$)/gi, "$1ft"],
+    [/\bSphere\b/g, "sph"], [/\bSquare\b/g, "sq"], [/\bCylinder\b/g, "cyl"], [/\bEmanation\b/g, "eman"], [/\bTwo-Handed\b/g, "2H"],
+    [/\bVersatile\b/g, "Vers"], [/\bAmmunition\b/g, "Ammo"], [/\bLoading\b/g, "Load"], [/\bRange\b/g, "Rng"],
+    [/\s*\+\s*/g, "+"], [/\s*\/\s*/g, "/"], [/\s{2,}/g, " "]];
   const abbr = s => ABBR.reduce((a, [re, to]) => a.replace(re, to), String(s || "")).trim();
 
   async function fill(PDFLib, blankBytes, c, opts) {
@@ -335,14 +338,22 @@
       text = safe(text).trim(); if (!text) return;
       const r = field.acroField.getWidgets()[0].getRectangle();
       if (!field.isMultiline()) {
+        const room = r.width - 2, full = text;
         let size = Math.min(10, r.height * 0.7);
-        const fits = s => font.widthOfTextAtSize(text, s) <= r.width - 4;
+        const fits = s => font.widthOfTextAtSize(text, s) <= room;
         while (size > MIN && !fits(size)) size -= 0.5;
-        if (!fits(size) && fallback) { const short = safe(fallback).trim(); if (font.widthOfTextAtSize(short, MIN) < font.widthOfTextAtSize(text, MIN)) { overflow.push({ label: label || "Notes", text }); text = short; size = Math.min(10, r.height * 0.7); while (size > MIN && font.widthOfTextAtSize(text, size) > r.width - 4) size -= 0.5; } }
-        if (font.widthOfTextAtSize(text, size) > r.width - 4) {
-          // still too long at the minimum size: keep what fits and move the full text to the extra page
-          overflow.push({ label: label || "Notes", text });
-          let cut = text; while (cut.length > 1 && font.widthOfTextAtSize(cut + "…", size) > r.width - 4) cut = cut.slice(0, -1);
+        if (!fits(size) && fallback) {
+          // the short form says the same thing, so nothing goes to the extra page if it fits
+          const short = safe(fallback).trim();
+          if (short && font.widthOfTextAtSize(short, MIN) < font.widthOfTextAtSize(text, MIN)) {
+            text = short; size = Math.min(10, r.height * 0.7);
+            while (size > MIN && !fits(size)) size -= 0.5;
+          }
+        }
+        if (font.widthOfTextAtSize(text, size) > room) {
+          // still too long at the minimum size: show what fits and put the full text on the extra page
+          overflow.push({ label: label || "Notes", text: full });
+          let cut = text; while (cut.length > 1 && font.widthOfTextAtSize(cut + "…", size) > room) cut = cut.slice(0, -1);
           text = cut.trimEnd() + "…";
         }
         field.setText(text); field.setFontSize(size); return;

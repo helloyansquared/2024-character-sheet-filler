@@ -12,7 +12,7 @@
 ## Facts
 - Price: free. No account.
 - Privacy: the PDF is read and filled in the browser tab; only anonymous step counts are sent. Details: https://2024-character-sheet-filler.yansquared.com/privacy/
-- The blank 2024 sheet is fetched by the visitor's browser from D&D Beyond, or the visitor drops it in; the site does not host it.
+- The visitor downloads the free fillable 2024 sheet from the D&D Beyond Free Rules and adds it next to their character PDF; the site does not host it.
 - Spells: the 2024 sheet has 30 rows for cantrips and prepared spells. Prepared casters choose which exported spells to print; extra spells and long text go on a continuation page, nothing is dropped.
 - Checked against real exports: levels 1-8; Bard, Cleric, Druid, Fighter, Paladin; 2014 and 2024 rules. Not yet checked: level 10+, Warlock pact slots, multiclass spellcasters.
 - Source code (MIT): https://github.com/helloyansquared/2024-character-sheet-filler

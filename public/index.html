@@ -34,10 +34,9 @@
       <div class="num">1</div>
       <div class="body">
         <h2>The blank 2024 sheet</h2>
-        <p class="status" id="blankStatus">Loading the official blank sheet from D&amp;D Beyond…</p>
-        <div class="fallback" id="blankFallback" hidden>
-          <p>Your browser couldn't fetch it directly. Two clicks instead: <a id="blankLink" href="https://media.dndbeyond.com/compendium-images/free-rules/ph/character-sheet.pdf" target="_blank" rel="noopener">download the free 2024 character sheet</a> (from the D&amp;D Beyond Free Rules), then drop it here.</p>
-          <label class="drop" id="blankDrop"><input type="file" accept="application/pdf,.pdf" id="blankInput"><span><b>Choose the blank sheet PDF</b> or drop it here</span></label>
+        <p class="status" id="blankStatus"><a id="blankLink" href="https://media.dndbeyond.com/compendium-images/free-rules/ph/character-sheet.pdf" target="_blank" rel="noopener"><b>Download the free 2024 character sheet</b></a> (the fillable one from the D&amp;D Beyond Free Rules), save it, then add it here. We don't host Wizards' sheet, so you get it straight from them; keep it and reuse it for every character. You can add both PDFs at once.</p>
+        <div class="fallback" id="blankFallback">
+          <label class="drop" id="blankDrop"><input type="file" accept="application/pdf,.pdf" id="blankInput" multiple><span><b>Choose the blank sheet PDF</b> or drop it here</span></label>
         </div>
       </div>
     </li>
@@ -46,7 +45,7 @@
       <div class="body">
         <h2>Your character PDF</h2>
         <p class="hint">In D&amp;D Beyond: open your character → <b>Manage</b> (next to the name) → <b>Export to PDF</b> → download.</p>
-        <label class="drop" id="charDrop"><input type="file" accept="application/pdf,.pdf" id="charInput"><span><b>Choose your exported PDF</b> or drop it here</span></label>
+        <label class="drop" id="charDrop"><input type="file" accept="application/pdf,.pdf" id="charInput" multiple><span><b>Choose your exported PDF</b> or drop it here</span></label>
         <p class="small">No PDF handy? <button type="button" class="link" id="sampleBtn">Try a made-up sample character</button></p>
         <div class="msg" id="charMsg" role="status" aria-live="polite"></div>
       </div>
@@ -75,7 +74,7 @@
   <h2>How it works</h2>
   <ol>
     <li><b>Reads your export.</b> D&amp;D Beyond's PDF keeps every value in a form field. We read those fields: name, class and subclass, ability scores, saves, skills, attacks, features, equipment, coins, spells and slots.</li>
-    <li><b>Fills the official sheet.</b> Your browser loads the free 2024 sheet from D&amp;D Beyond and we type each value into its matching box. Long text shrinks to fit; whatever still doesn't fit goes on an extra page, so nothing is dropped.</li>
+    <li><b>Fills the official sheet.</b> You add the free 2024 sheet from D&amp;D Beyond and we type each value into its matching box. Long text shrinks to fit; whatever still doesn't fit goes on an extra page, so nothing is dropped.</li>
     <li><b>Stays editable.</b> The result is the same form-fillable sheet, so you can fix anything in any PDF app before you print.</li>
   </ol>
   <p class="small">Checked against real exports: levels 1 to 8, Bard, Cleric, Druid, Fighter, Paladin, 2014 and 2024 rules, and an export from 2023. Not checked yet: level 10+, Warlock pact slots and multiclass spellcasters. If yours looks off, <a href="mailto:hello@yansquared.com?subject=2024%20sheet%20filler">tell us</a> (a PDF helps a lot).</p>
@@ -84,8 +83,8 @@
 <section id="faq" class="prose faq">
   <h2>FAQ</h2>
   <details open><summary>Why doesn't D&amp;D Beyond export the 2024 sheet itself?</summary><p>Its Export to PDF button still produces D&amp;D Beyond's own multi-page layout, even for characters built with the 2024 rules. Players have been asking for the 2024 layout on the D&amp;D Beyond forums since the 2024 Player's Handbook came out. Until that changes, this tool fills the official sheet from the export you already have.</p></details>
-  <details><summary>Is my character file uploaded anywhere?</summary><p>No. The page reads your PDF and builds the new one inside your browser. The only network requests are loading this page, the blank sheet from D&amp;D Beyond, and an anonymous step counter with no file contents. See <a href="/privacy/">privacy</a>.</p></details>
-  <details><summary>Why does it need the blank sheet from D&amp;D Beyond?</summary><p>The 2024 sheet belongs to Wizards of the Coast, so we don't host or hand out copies. Your browser loads the free version from the D&amp;D Beyond Free Rules each time. If your browser blocks that, download it yourself from the link in step 1 and drop it in.</p></details>
+  <details><summary>Is my character file uploaded anywhere?</summary><p>No. The page reads your PDF and builds the new one inside your browser. The only network requests are loading this page and an anonymous step counter with no file contents. See <a href="/privacy/">privacy</a>.</p></details>
+  <details><summary>Why do I have to download the blank sheet myself?</summary><p>The 2024 sheet belongs to Wizards of the Coast, so we don't host or hand out copies, and D&amp;D Beyond's file server only lets its own site load it directly. So you download the free, fillable version from the D&amp;D Beyond Free Rules (the link in step 1) and add it next to your character PDF. Keep it and you can reuse it for every character. The first 2024 sheet that came with the Player's Handbook isn't fillable, so use the Free Rules one.</p></details>
   <details><summary>Which spells end up on the sheet?</summary><p>The 2024 sheet has 30 rows for cantrips and prepared spells. If your list fits, everything is ticked for you. Prepared casters like Clerics, Druids and Paladins often export their whole class list, because D&amp;D Beyond's PDF doesn't say which spells you prepared today. Then we tick cantrips and always-prepared spells, and you tick the rest. Unticked spells aren't printed; ticked spells past row 30 go on an extra page.</p></details>
   <details><summary>What about features, feats and long backstories?</summary><p>Class features, species traits and feats are listed by name, because the 2024 sheet's boxes are small. Long text shrinks to fit, down to a readable minimum. Anything that still doesn't fit goes on a continuation page in full.</p></details>
   <details><summary>Can I edit the result?</summary><p>Yes. It's the official form-fillable sheet with your values in the fields, so any PDF app that supports forms (Acrobat Reader, Preview, most phone PDF apps) can change them.</p></details>
