@@ -1,0 +1,49 @@
+:root { --paper: #f6f1e6; --card: #fffdf8; --ink: #1f2a24; --muted: #5d665f; --green: #2f6b57; --green-d: #234f40; --gold: #c99a3b; --line: #d9cfbb; --bad: #a3332b; --ok: #2f6b57; }
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body { margin: 0; background: var(--paper); color: var(--ink); font: 17px/1.55 system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+a { color: var(--green-d); }
+h1, h2 { font-family: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif; line-height: 1.2; }
+.top { display: flex; justify-content: space-between; align-items: center; gap: 12px; max-width: 880px; margin: 0 auto; padding: 14px 20px; }
+.brand { display: flex; align-items: center; gap: 10px; font-weight: 700; color: var(--ink); text-decoration: none; }
+.top nav a { margin-left: 16px; color: var(--muted); text-decoration: none; font-size: 15px; }
+main { max-width: 880px; margin: 0 auto; padding: 0 20px 40px; }
+.hero h1 { font-size: clamp(28px, 5vw, 42px); margin: 18px 0 10px; }
+.lede { font-size: 19px; color: #2f3a33; max-width: 46em; margin: 0 0 22px; }
+.tool { background: var(--card); border: 2px solid var(--ink); border-radius: 14px; padding: 8px 22px 16px; box-shadow: 5px 5px 0 var(--ink); }
+.steps { list-style: none; margin: 0; padding: 0; }
+.step { display: flex; gap: 16px; padding: 18px 0; border-bottom: 1px dashed var(--line); }
+.step:last-child { border-bottom: 0; }
+.num { flex: 0 0 38px; height: 38px; border-radius: 50%; border: 2px solid var(--ink); display: grid; place-items: center; font-weight: 800; background: #fff; }
+.step.done .num { background: var(--green); color: #fff; border-color: var(--green); }
+.body { flex: 1; min-width: 0; }
+.body h2 { margin: 4px 0 6px; font-size: 22px; }
+.hint, .status { margin: 0 0 10px; }
+.small { font-size: 14px; color: var(--muted); }
+.drop { display: block; border: 2px dashed var(--green); border-radius: 12px; padding: 18px; text-align: center; background: #f1f6f2; cursor: pointer; }
+.drop.over { background: #dcebe2; }
+.drop input { display: block; margin: 0 auto 8px; max-width: 100%; }
+.go { background: var(--green); color: #fff; border: 2px solid var(--ink); border-radius: 10px; padding: 12px 22px; font: 700 18px system-ui, sans-serif; cursor: pointer; box-shadow: 3px 3px 0 var(--ink); }
+.go:disabled { background: #b9c2bc; cursor: not-allowed; box-shadow: none; }
+.link { background: none; border: 0; padding: 0; color: var(--green-d); text-decoration: underline; font: inherit; cursor: pointer; }
+.msg { margin-top: 10px; }
+.msg.bad { color: var(--bad); }
+.card { background: #f1f6f2; border-left: 4px solid var(--green); padding: 10px 12px; border-radius: 6px; color: var(--ink); }
+.warn { color: #6b4a12; background: #fbf1d9; border-radius: 6px; padding: 8px 12px 8px 30px; font-size: 15px; }
+.spells fieldset { border: 1px solid var(--line); border-radius: 10px; margin: 10px 0; padding: 6px 12px 10px; }
+.spells legend { font-weight: 700; padding: 0 6px; }
+.spells label { display: block; padding: 3px 0; }
+.tag { font-size: 12px; border: 1px solid var(--muted); border-radius: 4px; padding: 0 4px; color: var(--muted); }
+.tag.gold { border-color: var(--gold); color: #8a6417; }
+.src { font-size: 13px; color: var(--muted); }
+.count { position: sticky; top: 0; background: var(--card); padding: 6px 0; font-size: 15px; z-index: 1; }
+.bar { font-size: 14px; }
+.private { font-size: 14px; color: var(--muted); margin: 10px 0 0; display: flex; gap: 6px; align-items: flex-start; }
+.private svg { flex: 0 0 auto; margin-top: 4px; }
+.prose { margin-top: 36px; }
+.prose h2 { font-size: 26px; }
+.faq details { background: var(--card); border: 1px solid var(--line); border-radius: 10px; padding: 10px 14px; margin: 10px 0; }
+.faq summary { font-weight: 700; cursor: pointer; }
+footer { max-width: 880px; margin: 0 auto; padding: 20px; border-top: 1px solid var(--line); font-size: 14px; color: var(--muted); }
+.legal { font-size: 12.5px; }
+@media (max-width: 560px) { .tool { padding: 4px 14px 12px; box-shadow: 3px 3px 0 var(--ink); } .step { gap: 10px; } .num { flex-basis: 30px; height: 30px; } .top nav { display: none; } }
