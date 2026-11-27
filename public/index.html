@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>2024 Character Sheet Filler: put your D&amp;D Beyond PDF on the 2024 sheet</title>
-<meta name="description" content="Free tool: load the character PDF you exported from D&amp;D Beyond and get the official two-page 2024 character sheet, filled in and still editable. Runs in your browser; your file is not uploaded.">
+<title>D&amp;D Beyond to 2024 Character Sheet: Free PDF Converter</title>
+<meta name="description" content="Export your character from D&amp;D Beyond to PDF, drop it here, and get the official fillable 2024 character sheet filled in. Free, runs in your browser.">
 <meta name="msvalidate.01" content="C8B887130535DDB3D2E839806993CE85">
 <link rel="canonical" href="https://2024-character-sheet-filler.yansquared.com/">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
@@ -25,30 +25,30 @@
 
 <main>
 <section class="hero">
-  <h1>Your D&amp;D Beyond character, on the 2024 sheet</h1>
+  <h1>Convert your D&amp;D Beyond character PDF to the 2024 character sheet</h1>
   <p class="lede">D&amp;D Beyond's <b>Export to PDF</b> still gives you its older multi-page layout. Drop that PDF here and get the official two-page <b>2024 character sheet</b>, filled in and still editable. Free, and it all happens in your browser.</p>
 </section>
 
 <section class="tool" id="tool" aria-label="Converter">
   <ol class="steps">
-    <li class="step" id="step1">
-      <div class="num">1</div>
-      <div class="body">
-        <h2>The blank 2024 sheet</h2>
-        <p class="status" id="blankStatus"><a id="blankLink" href="https://media.dndbeyond.com/compendium-images/free-rules/ph/character-sheet.pdf" target="_blank" rel="noopener"><b>Download the free 2024 character sheet</b></a> (the fillable one from the D&amp;D Beyond Free Rules), save it, then add it here. We don't host Wizards' sheet, so you get it straight from them; keep it and reuse it for every character. You can add both PDFs at once.</p>
-        <div class="fallback" id="blankFallback">
-          <label class="drop" id="blankDrop"><input type="file" accept="application/pdf,.pdf" id="blankInput" multiple><span><b>Choose the blank sheet PDF</b> or drop it here</span></label>
-        </div>
-      </div>
-    </li>
     <li class="step" id="step2">
-      <div class="num">2</div>
+      <div class="num">1</div>
       <div class="body">
         <h2>Your character PDF</h2>
         <p class="hint">In D&amp;D Beyond: open your character → <b>Manage</b> (next to the name) → <b>Export to PDF</b> → download.</p>
         <label class="drop" id="charDrop"><input type="file" accept="application/pdf,.pdf" id="charInput" multiple><span><b>Choose your exported PDF</b> or drop it here</span></label>
         <p class="small">No PDF handy? <button type="button" class="link" id="sampleBtn">Try a made-up sample character</button></p>
         <div class="msg" id="charMsg" role="status" aria-live="polite"></div>
+      </div>
+    </li>
+    <li class="step" id="step1">
+      <div class="num">2</div>
+      <div class="body">
+        <h2>The blank 2024 sheet</h2>
+        <p class="status" id="blankStatus"><a id="blankLink" href="https://media.dndbeyond.com/compendium-images/free-rules/ph/character-sheet.pdf" target="_blank" rel="noopener"><b>Download the free 2024 character sheet</b></a> (the fillable one from the D&amp;D Beyond Free Rules), save it, then add it here (it opens in a new tab: use the download or save icon). If that link ever stops working, find it under <a href="https://www.dndbeyond.com/sources/dnd/free-rules" target="_blank" rel="noopener">D&amp;D Beyond Free Rules</a>. We don't host Wizards' sheet, so you get it straight from them; keep it and reuse it for every character. You can add both PDFs at once.</p>
+        <div class="fallback" id="blankFallback">
+          <label class="drop" id="blankDrop"><input type="file" accept="application/pdf,.pdf" id="blankInput" multiple><span><b>Choose the blank sheet PDF</b> or drop it here</span></label>
+        </div>
       </div>
     </li>
     <li class="step" id="step3">
@@ -64,6 +64,7 @@
       <div class="body">
         <h2>Download</h2>
         <button type="button" class="go" id="goBtn" disabled>Make my 2024 sheet</button>
+        <p class="small need" id="goHint">Add your character PDF (step 1) and the blank 2024 sheet (step 2) first.</p>
         <div class="msg" id="doneMsg" role="status" aria-live="polite"></div>
       </div>
     </li>

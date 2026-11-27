@@ -303,6 +303,11 @@
     const missing = checkBlank(PDFLib, form);
     if (missing) { const e = new Error("bad-blank"); e.missing = missing; throw e; }
     const font = await doc.embedFont(PDFLib.StandardFonts.Helvetica);
+    // If someone adds an already-filled sheet as the blank, clear old values so nothing leaks into the new character.
+    for (const f of form.getFields()) {
+      if (f instanceof PDFLib.PDFTextField) { if (f.getText()) { f.setText(""); f.updateAppearances(font); } }
+      else if (f instanceof PDFLib.PDFCheckBox) { if (f.isChecked()) f.uncheck(); }
+    }
     const overflow = [], replaced = new Set();
     const MIN = 6;
     const pages = doc.getPages();

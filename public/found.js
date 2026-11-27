@@ -39,16 +39,15 @@
     if (shown || ls("found-asked")) return; shown = true;
     var box = document.createElement("div");
     box.setAttribute("role", "dialog"); box.setAttribute("aria-label", "Quick question");
-    box.style.cssText = "position:fixed;right:16px;bottom:16px;z-index:9999;max-width:320px;background:#fff;color:#1d2433;border:2px solid #1d2433;border-radius:12px;padding:14px 16px;box-shadow:0 8px 24px rgba(0,0,0,.18);font:15px/1.4 system-ui,-apple-system,Segoe UI,sans-serif";
+    box.className = "found-ask";
     var opts = ["ChatGPT", "Google", "Another AI", "Reddit", "Tumblr", "A friend", "Other"];
-    box.innerHTML = '<button type="button" aria-label="Close" data-x style="position:absolute;top:6px;right:8px;border:0;background:none;font-size:20px;cursor:pointer;color:inherit">×</button>'
-      + '<b style="display:block;margin:0 22px 8px 0">Glad it worked! How did you find this site?</b>'
-      + '<div style="display:flex;flex-wrap:wrap;gap:6px">' + opts.map(function (o) {
-        return '<button type="button" data-a="' + o + '" style="border:1.5px solid #1d2433;background:#f4f4f1;border-radius:99px;padding:5px 11px;cursor:pointer;font:inherit;color:inherit">' + o + '</button>'; }).join("") + '</div>'
-      + '<form data-q hidden style="margin-top:10px"><label style="display:block;font-size:14px;margin-bottom:4px">What did you ask or search for? <span style="opacity:.7">(optional, no personal details)</span></label>'
-      + '<input maxlength="200" style="width:100%;box-sizing:border-box;padding:7px 9px;border:1.5px solid #1d2433;border-radius:8px;font:inherit">'
-      + '<button style="margin-top:8px;border:0;background:#1d2433;color:#fff;border-radius:8px;padding:7px 14px;cursor:pointer;font:inherit">Send</button></form>'
-      + '<p style="margin:8px 0 0;font-size:12.5px;opacity:.75">Anonymous, no cookies. Helps a one-person project know where people come from.</p>';
+    box.innerHTML = '<button type="button" aria-label="Close" data-x class="fx">×</button>'
+      + '<b class="fh">Glad it worked! How did you find this site?</b>'
+      + '<div class="fo">' + opts.map(function (o) {
+        return '<button type="button" data-a="' + o + '">' + o + '</button>'; }).join("") + '</div>'
+      + '<form data-q hidden><label>What did you ask or search for? <span>(optional, no personal details)</span></label>'
+      + '<input maxlength="200"><button class="fs">Send</button></form>'
+      + '<p class="fn">Anonymous, no cookies. Helps a one-person project know where people come from.</p>';
     var ans = "";
     function done(msg) { ls("found-asked", "1"); box.innerHTML = "<b>" + msg + "</b>"; setTimeout(function () { box.remove(); }, 1800); }
     box.addEventListener("click", function (e) {
@@ -57,7 +56,7 @@
       if (t.getAttribute && t.getAttribute("data-a")) {
         var first = !ans; ans = t.getAttribute("data-a");
         if (first) { ls("found-asked", "1"); send({ t: "ask", src: ss("found-src") || "", ans: ans }); }
-        box.querySelectorAll("[data-a]").forEach(function (b) { b.style.background = b === t ? "#1d2433" : "#f4f4f1"; b.style.color = b === t ? "#fff" : "inherit"; });
+        box.querySelectorAll("[data-a]").forEach(function (b) { b.classList.toggle("on", b === t); });
         var f = box.querySelector("[data-q]"); f.hidden = false; f.querySelector("input").focus();
       }
     });

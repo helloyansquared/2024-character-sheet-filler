@@ -56,8 +56,15 @@
     "pact": "Warlock pact slots haven't been checked against a real export yet. Please check the spell slots.",
     "high-level": "Level 10+ hasn't been checked against a real export yet. Please look over page 2.",
   };
+  function dropCharacter() {
+    state.c = null; state.picked = new Set();
+    $("spellBox").hidden = true; $("spellBox").innerHTML = "";
+    $("step2").classList.remove("done"); $("step3").classList.remove("done");
+    refresh();
+  }
   async function takeCharacter(bytes, label) {
     const msg = $("charMsg");
+    dropCharacter();
     let rows;
     try { rows = Sheet.read(bytes); } catch (e) {
       const code = ERR[e.message] ? e.message : "unreadable";
@@ -133,7 +140,9 @@
   // ------------------------------------------------------------- step 4: make + download
   function refresh() {
     $("goBtn").disabled = !(state.blank && state.c);
-    $("goBtn").title = !state.blank ? "Load the blank sheet first (step 1)" : !state.c ? "Add your character PDF (step 2)" : "";
+    const need = !state.c && !state.blank ? "Add your character PDF (step 1) and the blank 2024 sheet (step 2) first."
+      : !state.c ? "Now add your character PDF (step 1)." : !state.blank ? "Almost there: add the blank 2024 sheet (step 2)." : "";
+    $("goBtn").title = need; $("goHint").textContent = need; $("goHint").hidden = !need;
   }
   $("goBtn").addEventListener("click", async () => {
     const btn = $("goBtn"), msg = $("doneMsg");
@@ -145,7 +154,8 @@
       const url = URL.createObjectURL(new Blob([out.bytes], { type: "application/pdf" }));
       const a = document.createElement("a"); a.href = url; a.download = name + "-2024-sheet.pdf";
       document.body.appendChild(a); a.click(); a.remove();
-      setTimeout(() => URL.revokeObjectURL(url), 60000);
+      if (state.url) URL.revokeObjectURL(state.url);
+      state.url = url;
       let note = "Done: <b>" + esc(a.download) + "</b> (" + out.pages + " pages). ";
       if (out.pages > 2) note += "Page 3 has what didn't fit: " + esc(out.overflow.join(", ")) + ". ";
       if (out.replaced.length) note += "Some characters (" + esc(out.replaced.join(" ")) + ") aren't in the sheet's font and show as “?”; you can retype them in a PDF app. ";
@@ -176,6 +186,7 @@
   $("sampleBtn").addEventListener("click", async () => {
     try {
       const r = await fetch("/sample/rowan-hale-ddb-format.pdf");
+      if (!r.ok) throw new Error("sample " + r.status);
       await takeCharacter(new Uint8Array(await r.arrayBuffer()), "sample");
       $("charMsg").insertAdjacentHTML("afterbegin", "<p class=\"small\">Sample: a made-up character, not a real export.</p>");
     } catch (e) { setMsg($("charMsg"), "Couldn't load the sample.", "bad"); }
